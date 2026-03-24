@@ -1,4 +1,4 @@
-# Foundry 0.1rx End User License Agreement (EULA)
+# Foundry Source End User License Agreement (EULA)
 
 * Do *NOT* use the provided source or assets for commercial or illegal use.
 
