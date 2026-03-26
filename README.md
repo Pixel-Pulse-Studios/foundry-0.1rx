@@ -15,12 +15,7 @@ SET COMPILER_PATH=D:\raylib\w64devkit\bin
 ENV_SET PATH=$(COMPILER_PATH)
 SET CC=g++
 
-REM === Lua additions ===
-SET LUA_PATH=D:\Lua
-SET LUA_INCLUDE=$(LUA_PATH)\include
-SET LUA_LIB=$(LUA_PATH)
-
-SET CFLAGS=$(RAYLIB_PATH)\src\raylib.rc.data -s -static -O2 -Wall -I$(RAYLIB_PATH)\src -Iexternal -I$(LUA_INCLUDE) -DPLATFORM_DESKTOP
+SET CFLAGS=$(RAYLIB_PATH)\src\raylib.rc.data -s -static -O2 -Wall -I$(RAYLIB_PATH)\src -Iexternal -DPLATFORM_DESKTOP
 SET LDFLAGS=-lraylib -llua54 -lopengl32 -lgdi32 -lwinmm -pthread -L$(LUA_LIB)
 
 cd $(CURRENT_DIRECTORY)
