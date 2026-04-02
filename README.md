@@ -1,4 +1,4 @@
-# KatchFoundry - 0.1rx
+# KatchFoundry - 0.22rx
 The C++ rewrite of the game KatchFoundry.
 
 This is only the source code of releases of foundry. The source code is only released for specific versions.

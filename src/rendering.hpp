@@ -132,8 +132,8 @@ void DrawChunk(Chunk chunk) {
                     if (chunk.blocks[index] != 0) {
                         Vector3 pos = {(float)(x), (float)(y), (float)(z)};
                         if(!IsBlockCovered(chunk, x, y, z)) {
-                            //if (BlockEntries[chunk.blocks[index]].TextureNames[1].empty()) RenderVoxel(chunk, x, y, z, BlockEntries[chunk.blocks[index]].Textures[0], WHITE, pos, (Vector2){1, 1}, 2.0f);
-                            //if (!BlockEntries[chunk.blocks[index]].TextureNames[5].empty()) RenderSidedVoxel(chunk, x, y, z, BlockEntries[chunk.blocks[index]].Textures, WHITE, pos, (Vector2){1, 1}, 2.0f);
+                            //if (BlockEntries[chunk.blocks[index]].TextureSrc[1].empty()) RenderVoxel(chunk, x, y, z, BlockEntries[chunk.blocks[index]].Textures[0], WHITE, pos, (Vector2){1, 1}, 2.0f);
+                            //if (!BlockEntries[chunk.blocks[index]].TextureSrc[5].empty()) RenderSidedVoxel(chunk, x, y, z, BlockEntries[chunk.blocks[index]].Textures, WHITE, pos, (Vector2){1, 1}, 2.0f);
                             DrawCubeWires((Vector3){(float)x,(float)y,(float)z}, 1.0f, 1.0f, 1.0f, RED);
                         }
                     }

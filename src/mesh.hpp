@@ -1,9 +1,9 @@
 inline void PushAtlasUV(std::vector<float>& texcoords, int tile)
 {
-    const float tileSize = 1.0f / 4.0f;
+    const float tileSize = 1.0f / 8.0f;
 
-    int tx = tile % 4;
-    int ty = tile / 4;
+    int tx = tile % 8;
+    int ty = tile / 8;
 
     float u0 = tx * tileSize;
     float v0 = ty * tileSize;
@@ -18,7 +18,7 @@ inline void PushAtlasUV(std::vector<float>& texcoords, int tile)
     });
 }
 
-void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
+void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks,float dayTime = 0.5f)
 {
     if ((!translucent && chunk.ChunkMesh.vertexCount > 0) ||
         (translucent && chunk.TranslucentChunkMesh.vertexCount > 0))
@@ -29,6 +29,9 @@ void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
             UnloadMesh(chunk.ChunkMesh);
         }
     }
+    
+    chunk.Properties = UpdateLight(chunk,chunks,dayTime);
+    TraceLog(LOG_INFO, "dayTime=%.2f light[100]=%d", dayTime, chunk.Properties[100].lights);
 
     std::vector<float> vertices;
     std::vector<unsigned short> indices;
@@ -51,11 +54,13 @@ void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
                 if (!translucent && BlockEntries[block].translucent) continue;
                 if (translucent && !BlockEntries[block].translucent) continue;
 
-                int tileID = BlockEntries[block].TextureNames[0];
+                int tileID = BlockEntries[block].TextureSrc[0];
                 int SidetileID = 0;
-                if(BlockEntries[block].TextureNames[1]) SidetileID = BlockEntries[block].TextureNames[1];
+                if(BlockEntries[block].TextureSrc[1]) SidetileID = BlockEntries[block].TextureSrc[1];
                 float transparency = BlockEntries[block].transparency;
                 unsigned char alpha = (unsigned char)((1.0f - transparency) * 255.0f);
+                unsigned char lightLevel = chunk.Properties[index].lights;
+                unsigned char rgblight = lightLevel;
                 
                 // TOP
                 if (!IsFaceCovered(chunk, x, y, z, 5, chunks))
@@ -74,9 +79,9 @@ void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
                         n, (unsigned short)(n+2), (unsigned short)(n+3)
                     });
                     for (int i = 0; i < 4; i++) {
-                        colors.push_back(255);
-                        colors.push_back(255);
-                        colors.push_back(255);
+                        colors.push_back(rgblight * 28);
+                        colors.push_back(rgblight * 28);
+                        colors.push_back(rgblight * 28);
                         colors.push_back(alpha);
                     }
                     PushAtlasUV(texcoords, tileID);
@@ -99,9 +104,9 @@ void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
                         n, (unsigned short)(n+2), (unsigned short)(n+3)
                     });
                     for (int i = 0; i < 4; i++) {
-                        colors.push_back(255);
-                        colors.push_back(255);
-                        colors.push_back(255);
+                        colors.push_back(rgblight * 28);
+                        colors.push_back(rgblight * 28);
+                        colors.push_back(rgblight * 28);
                         colors.push_back(alpha);
                     }
                     PushAtlasUV(texcoords, tileID);
@@ -124,9 +129,9 @@ void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
                         n, (unsigned short)(n+2), (unsigned short)(n+3)
                     });
                     for (int i = 0; i < 4; i++) {
-                        colors.push_back(255);
-                        colors.push_back(255);
-                        colors.push_back(255);
+                        colors.push_back(rgblight * 24);
+                        colors.push_back(rgblight * 24);
+                        colors.push_back(rgblight * 24);
                         colors.push_back(alpha);
                     }
                     if(SidetileID) { PushAtlasUV(texcoords, SidetileID); } else
@@ -150,9 +155,9 @@ void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
                         n, (unsigned short)(n+2), (unsigned short)(n+3)
                     });
                     for (int i = 0; i < 4; i++) {
-                        colors.push_back(155);
-                        colors.push_back(155);
-                        colors.push_back(155);
+                        colors.push_back(rgblight * 22);
+                        colors.push_back(rgblight * 22);
+                        colors.push_back(rgblight * 22);
                         colors.push_back(alpha);
                     }
                     if(SidetileID) { PushAtlasUV(texcoords, SidetileID); } else
@@ -176,9 +181,9 @@ void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
                         n, (unsigned short)(n+2), (unsigned short)(n+3)
                     });
                     for (int i = 0; i < 4; i++) {
-                        colors.push_back(155);
-                        colors.push_back(155);
-                        colors.push_back(155);
+                        colors.push_back(rgblight * 17);
+                        colors.push_back(rgblight * 17);
+                        colors.push_back(rgblight * 17);
                         colors.push_back(alpha);
                     }
                     if(SidetileID) { PushAtlasUV(texcoords, SidetileID); } else
@@ -202,9 +207,9 @@ void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
                         n, (unsigned short)(n+2), (unsigned short)(n+3)
                     });
                     for (int i = 0; i < 4; i++) {
-                        colors.push_back(200);
-                        colors.push_back(200);
-                        colors.push_back(200);
+                        colors.push_back(rgblight * 17);
+                        colors.push_back(rgblight * 17);
+                        colors.push_back(rgblight * 17);
                         colors.push_back(alpha);
                     }
                     if(SidetileID) { PushAtlasUV(texcoords, SidetileID); } else
@@ -236,13 +241,31 @@ void BuildChunkMesh(Chunk& chunk, bool translucent, vector<Chunk>& chunks)
         chunk.ChunkMesh = mesh;
 }
 
-void BuildChunkMeshes(vector<Chunk>& chunks) {
+void RebuildNeighborChunks(Chunk& chunk, vector<Chunk>& chunks, float dayTime = 0.5f) {
+    int cx = chunk.ChunkX;
+    int cz = chunk.ChunkZ;
+
+    int neighbors[4][2] = {{cx+1,cz},{cx-1,cz},{cx,cz+1},{cx,cz-1}};
+
+    for (auto& n : neighbors) {
+        for (Chunk& neighbor : chunks) {
+            if (neighbor.ChunkX == n[0] && neighbor.ChunkZ == n[1]) {
+                UpdateLight(neighbor, chunks, dayTime);
+                BuildChunkMesh(neighbor, false, chunks, dayTime);
+                BuildChunkMesh(neighbor, true, chunks, dayTime);
+                break;
+            }
+        }
+    }
+}
+
+void BuildChunkMeshes(vector<Chunk>& chunks,float dayTime = 0.5) {
     for(int x = 0; x < WORLD_SIZE; x++) {
             for(int z = 0; z < WORLD_SIZE; z++) {
                 int index = x + z * WORLD_SIZE;
                 Chunk& chunk = chunks[index];
-                BuildChunkMesh(chunk,false,chunks);
-                BuildChunkMesh(chunk,true,chunks);
+                BuildChunkMesh(chunk,false,chunks,dayTime);
+                BuildChunkMesh(chunk,true,chunks,dayTime);
         }
     }
 }
